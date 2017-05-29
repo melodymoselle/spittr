@@ -21,6 +21,7 @@ public class SpittrControllerTest {
                 .andExpect(view().name("registerForm"));
     }
 
+    //Not passing because of Spitter equals() method.
     @Test
     public void shouldProcessRegistration() throws Exception {
         SpitterRepository mockRepository = mock(SpitterRepository.class);
@@ -36,5 +37,17 @@ public class SpittrControllerTest {
                 .param("password", "24hours"))
                 .andExpect(redirectedUrl("/spitter/jbauer"));
         verify(mockRepository, atLeastOnce()).save(unsaved);
+    }
+
+    @Test
+    public void shouldShowProfile() throws Exception {
+        SpitterRepository mockRepository = mock(SpitterRepository.class);
+        Spitter saved = new Spitter(24L, "jbauer", "24hours", "Jack", "Bauer");
+        when(mockRepository.findByUsername("Jack")).thenReturn(saved);
+        SpitterController controller = new SpitterController(mockRepository);
+        MockMvc mockMvc = standaloneSetup(controller).build();
+        mockMvc.perform(get("/spitter/Jack"))
+                .andExpect(view().name("profile"));
+        verify(mockRepository, atLeastOnce()).findByUsername("Jack");
     }
 }

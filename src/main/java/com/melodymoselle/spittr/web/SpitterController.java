@@ -33,7 +33,6 @@ public class SpitterController {
         return "redirect:/spitter/" + spitter.getUsername();
     }
 
-    //Need to add TEST
     @RequestMapping(value="/{username}", method=GET)
     public String showSpitterProfile(@PathVariable String username, Model model) {
         Spitter spitter = spitterRepository.findByUsername(username);
